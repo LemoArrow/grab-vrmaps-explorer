@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 20% 95%;
+    --foreground: 20 10% 20%;
+
+    --card: 0 0% 28%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 28%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 30 90% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 30% 75%;
+    --secondary-foreground: 20 10% 20%;
+
+    --muted: 30 10% 85%;
+    --muted-foreground: 20 5% 45%;
+
+    --accent: 30 70% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 15% 80%;
+    --input: 0 0% 35%;
+    --ring: 30 90% 50%;
+
+    --radius: 0.5rem;
+
+    --navbar: 0 0% 15%;
+    --navbar-foreground: 0 0% 95%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cellipse cx='35' cy='45' rx='14' ry='18' fill='%23f7e84e' transform='rotate(-20 35 45)'/%3E%3Cellipse cx='35' cy='45' rx='12' ry='16' fill='%23ffe566' transform='rotate(-20 35 45)'/%3E%3Cpath d='M33 28c-2-6 1-10 4-12' stroke='%2388a44a' stroke-width='1.5' fill='none'/%3E%3Cellipse cx='36' cy='20' rx='5' ry='3' fill='%2396b84e' transform='rotate(-30 36 20)'/%3E%3Cellipse cx='95' cy='90' rx='12' ry='16' fill='%23f7e84e' transform='rotate(15 95 90)'/%3E%3Cellipse cx='95' cy='90' rx='10' ry='14' fill='%23ffe566' transform='rotate(15 95 90)'/%3E%3Cpath d='M93 74c-1-5 2-9 4-10' stroke='%2388a44a' stroke-width='1.5' fill='none'/%3E%3Cellipse cx='96' cy='67' rx='4' ry='2.5' fill='%2396b84e' transform='rotate(-10 96 67)'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
+  }
+}
