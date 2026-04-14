@@ -8,6 +8,7 @@ import DownloadPage from "./pages/DownloadPage.tsx";
 import Tutorial from "./pages/Tutorial.tsx";
 import Legal from "./pages/Legal.tsx";
 import CharacterColor from "./pages/CharacterColor.tsx";
+import AILevelGenerator from "./pages/AILevelGenerator.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/download" element={<DownloadPage />} />
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/character-color" element={<CharacterColor />} />
+          <Route path="/ai-generator" element={<AILevelGenerator />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

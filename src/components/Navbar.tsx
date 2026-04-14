@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush } from "lucide-react";
+import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush, Sparkles } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
   { to: "/download", label: "Download", icon: Download },
   { to: "/download?tab=multi", label: "Multi Download", icon: Layers },
   { to: "/character-color", label: "Character Color", icon: Paintbrush },
+  { to: "/ai-generator", label: "AI Generator", icon: Sparkles },
   { to: "https://grabvr.tools/editor", label: "JSON Level Editor", icon: PenTool, external: true },
   { to: "/tutorial", label: "Tutorial", icon: BookOpen },
   { to: "/legal", label: "Legal", icon: Scale },
