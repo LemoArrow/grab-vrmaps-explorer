@@ -67,7 +67,7 @@ const AILevelGenerator = () => {
     if (!generatedLevel) return;
 
     const json = JSON.stringify(generatedLevel);
-    const blob = new Blob([json], { type: "application/json" });
+    const blob = new Blob([json], { type: "application/octet-stream" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
