@@ -6,52 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
-
-function parseLevelId(input: string): string | null {
-  const match = input.match(/level=([^&]+)/);
-  if (match) return match[1];
-  if (/^[a-zA-Z0-9_-]+:\d+$/.test(input)) return input;
-  return null;
-}
-
-async function fetchLevel(levelId: string): Promise<void> {
-  const parts = levelId.split(":");
-  if (parts.length !== 2) throw new Error("Invalid level ID");
-  const [userId, iteration] = parts;
-
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-  const headers = { Authorization: `Bearer ${anonKey}`, apikey: anonKey };
-
-  // Fetch details to get the title
-  const detailsRes = await fetch(
-    `${supabaseUrl}/functions/v1/grab-proxy?action=details&user_id=${userId}&iteration=${iteration}`,
-    { headers }
-  );
-  const details = detailsRes.ok ? await detailsRes.json() : null;
-  const title = details?.title && details.title !== "null" ? details.title : levelId;
-  const version = details?.iteration || "1";
-
-  // Download the level file
-  const downloadRes = await fetch(
-    `${supabaseUrl}/functions/v1/grab-proxy?action=download&user_id=${userId}&iteration=${iteration}&version=${version}`,
-    { headers }
-  );
-  if (!downloadRes.ok) {
-    const err = await downloadRes.json().catch(() => ({}));
-    throw new Error(err.error || `Failed to download level ${levelId}`);
-  }
-
-  const blob = await downloadRes.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${title.replace(/[^a-zA-Z0-9]/g, "_")}.level`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
+import { parseLevelId, downloadByLevelId } from "@/lib/grabApi";
 
 const SingleDownload = () => {
   const [url, setUrl] = useState("");
