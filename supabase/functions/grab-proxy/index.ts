@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     try {
       const res = await fetch(
         `${SEARCH_BASE}/levels/search?term=${encodeURIComponent(term)}`,
-        { headers: { "Accept": "application/json" } }
+        { headers: { "Accept": "application/json", "User-Agent": "grab-level-grabber/1.0" } }
       );
       const text = await res.text();
       return new Response(text, {
