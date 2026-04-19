@@ -20,7 +20,7 @@ const SingleDownload = () => {
     }
     setLoading(true);
     try {
-      await fetchLevel(levelId);
+      await downloadByLevelId(levelId);
       toast.success("Level downloaded!");
     } catch {
       toast.error("Failed to download level. Check the URL and try again.");
@@ -80,7 +80,7 @@ const MultiDownload = () => {
     let success = 0;
     for (const id of ids) {
       try {
-        await fetchLevel(id);
+        await downloadByLevelId(id);
         success++;
         await new Promise((r) => setTimeout(r, 500));
       } catch {
