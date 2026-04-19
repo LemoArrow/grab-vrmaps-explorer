@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import DownloadPage from "./pages/DownloadPage.tsx";
+import BrowsePage from "./pages/BrowsePage.tsx";
 import Tutorial from "./pages/Tutorial.tsx";
 import Legal from "./pages/Legal.tsx";
 import CharacterColor from "./pages/CharacterColor.tsx";
@@ -22,6 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/download" element={<DownloadPage />} />
+          <Route path="/browse" element={<BrowsePage />} />
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/character-color" element={<CharacterColor />} />
           <Route path="/ai-generator" element={<AILevelGenerator />} />
