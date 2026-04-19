@@ -8,7 +8,7 @@ const PROXY_BASE = "https://ijmowerdujivlvqojroc.supabase.co/functions/v1/grab-p
 const PROXY_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqbW93ZXJkdWppdmx2cW9qcm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjEzOTcsImV4cCI6MjA5MDgzNzM5N30.55W84VdH_BaYqdBMSole6LLNHETjvkV-iYad4bMJeP8";
 
 // Public unsigned community search API
-const SEARCH_BASE = "https://api.grab.tools";
+const SEARCH_BASE = "https://grabvr.tools/api";
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
     try {
       const res = await fetch(
         `${SEARCH_BASE}/levels/search?term=${encodeURIComponent(term)}`,
-        { headers: { "Accept": "application/json" } }
+        { headers: { "Accept": "application/json", "User-Agent": "grab-level-grabber/1.0" } }
       );
       const text = await res.text();
       return new Response(text, {
