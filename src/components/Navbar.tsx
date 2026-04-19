@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush, Sparkles } from "lucide-react";
+import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush, Sparkles, Search } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
+  { to: "/browse", label: "Browse", icon: Search },
   { to: "/download", label: "Download", icon: Download },
   { to: "/download?tab=multi", label: "Multi Download", icon: Layers },
   { to: "/character-color", label: "Character Color", icon: Paintbrush },
