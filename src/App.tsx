@@ -9,6 +9,7 @@ import BrowsePage from "./pages/BrowsePage.tsx";
 import Tutorial from "./pages/Tutorial.tsx";
 import Legal from "./pages/Legal.tsx";
 import CharacterColor from "./pages/CharacterColor.tsx";
+import CharacterThumbnail from "./pages/CharacterThumbnail.tsx";
 import AILevelGenerator from "./pages/AILevelGenerator.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/browse" element={<BrowsePage />} />
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/character-color" element={<CharacterColor />} />
+          <Route path="/character-thumbnail" element={<CharacterThumbnail />} />
           <Route path="/ai-generator" element={<AILevelGenerator />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="*" element={<NotFound />} />
