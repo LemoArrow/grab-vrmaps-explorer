@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   const action = url.searchParams.get("action");
 
-  // -------- Search action: proxy to api.grab.tools --------
+  // -------- Search action: proxy through signed reference function --------
   if (action === "search") {
     const term = url.searchParams.get("term") || "";
     if (!term.trim()) {
@@ -28,10 +28,14 @@ Deno.serve(async (req) => {
       });
     }
     try {
-      const res = await fetch(
-        `${SEARCH_BASE}/levels/search?term=${encodeURIComponent(term)}`,
-        { headers: { "Accept": "application/json", "User-Agent": "grab-level-grabber/1.0" } }
-      );
+      const params = new URLSearchParams({ action: "search", term });
+      const res = await fetch(`${PROXY_BASE}?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${PROXY_KEY}`,
+          apikey: PROXY_KEY,
+          Accept: "application/json",
+        },
+      });
       const text = await res.text();
       return new Response(text, {
         status: res.status,
