@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Paintbrush, Copy, Check } from "lucide-react";
+import { Paintbrush, Copy, Check, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -60,15 +60,40 @@ const CharacterColor = () => {
     ? `"customColor": {\n  "r": ${normalized.r},\n  "g": ${normalized.g},\n  "b": ${normalized.b},\n  "a": 1\n}`
     : "";
 
+  const bookmarklet = `javascript:(()=>{window.open('${window.location.origin}/character-color','grabCustomColor','width=520,height=760')})()`;
+
   return (
     <Layout>
-      <div className="flex-1 flex flex-col items-center px-4 py-8">
-        <div className="flex items-center gap-2 mb-6">
-          <Paintbrush className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground">Character Color Picker</h1>
-        </div>
+      <main className="flex-1 w-full px-4 py-10 md:py-16">
+        <section className="mx-auto w-full max-w-3xl space-y-8">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Paintbrush className="h-6 w-6 text-primary" />
+              <h1 className="text-3xl font-bold text-foreground">Custom Colors</h1>
+            </div>
+            <p className="max-w-2xl text-muted-foreground">
+              Drag the button to your bookmarks bar, or click it to copy the bookmarklet. Then open the level browser,
+              log in, and run it from your bookmarks.
+            </p>
+            <Button
+              asChild
+              variant="outline"
+              className="h-10 border-border bg-card/70 px-5 text-card-foreground hover:bg-accent hover:text-accent-foreground"
+            >
+              <a
+                href={bookmarklet}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleCopy(bookmarklet, "Bookmarklet");
+                }}
+              >
+                Custom Color Picker
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </Button>
+          </div>
 
-        <div className="bg-card/80 backdrop-blur-sm border border-border rounded-lg p-6 shadow-xl w-full max-w-lg space-y-6">
+          <div className="bg-card/80 backdrop-blur-sm border border-border rounded-lg p-6 shadow-xl w-full max-w-lg space-y-6">
           {/* Color preview */}
           <div className="flex items-center gap-4">
             <div
@@ -164,8 +189,9 @@ const CharacterColor = () => {
               Copy Hex Code
             </Button>
           )}
-        </div>
-      </div>
+          </div>
+        </section>
+      </main>
     </Layout>
   );
 };
