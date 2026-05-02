@@ -32,6 +32,66 @@ export async function searchLevels(term: string): Promise<LevelSearchResult[]> {
   return data as LevelSearchResult[];
 }
 
+/**
+ * Extract sublevel identifiers from a level's binary (protobuf) data.
+ * Sublevel references are stored as strings like "community:userId:iteration"
+ * inside trigger target nodes. We scan the raw bytes for these patterns.
+ */
+function extractSublevelIds(buffer: ArrayBuffer, mainUserId: string): string[] {
+  const bytes = new Uint8Array(buffer);
+  const text = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+
+  const ids = new Set<string>();
+
+  // Pattern 1: "community:userId:iteration" — extract userId:iteration
+  const communityPattern = /community:([a-zA-Z0-9_-]+):(\d{5,})/g;
+  let match: RegExpExecArray | null;
+  while ((match = communityPattern.exec(text)) !== null) {
+    const id = `${match[1]}:${match[2]}`;
+    ids.add(id);
+  }
+
+  // Pattern 2: direct "userId:iteration" that aren't the main level
+  // Look for GRAB-style user IDs (20+ char alphanumeric) followed by timestamp iterations
+  const directPattern = /([a-z0-9]{15,}):(\d{10,})/g;
+  while ((match = directPattern.exec(text)) !== null) {
+    const id = `${match[1]}:${match[2]}`;
+    // Skip if it's the main level itself
+    if (match[1] !== mainUserId) {
+      ids.add(id);
+    }
+  }
+
+  return Array.from(ids);
+}
+
+function triggerDownload(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function fetchLevelBlob(
+  userId: string,
+  iteration: string | number,
+  version: string | number = "1"
+): Promise<Blob> {
+  const downloadRes = await fetch(
+    `${supabaseUrl}/functions/v1/grab-proxy?action=download&user_id=${userId}&iteration=${iteration}&version=${version}`,
+    { headers }
+  );
+  if (!downloadRes.ok) {
+    const err = await downloadRes.json().catch(() => ({}));
+    throw new Error(err.error || `Failed to download ${userId}:${iteration}`);
+  }
+  return downloadRes.blob();
+}
+
 export async function downloadLevel(
   userId: string,
   iteration: string | number,
@@ -55,24 +115,54 @@ export async function downloadLevel(
     // fall back to defaults
   }
 
-  const downloadRes = await fetch(
-    `${supabaseUrl}/functions/v1/grab-proxy?action=download&user_id=${userId}&iteration=${iteration}&version=${version}`,
-    { headers }
-  );
-  if (!downloadRes.ok) {
-    const err = await downloadRes.json().catch(() => ({}));
-    throw new Error(err.error || `Failed to download ${userId}:${iteration}`);
-  }
+  const safeTitle = title.replace(/[^a-zA-Z0-9 ]/g, "_").trim();
 
-  const blob = await downloadRes.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${title.replace(/[^a-zA-Z0-9]/g, "_")}.level`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  // Download main level
+  const mainBlob = await fetchLevelBlob(userId, iteration, version);
+
+  // Trigger main level download
+  triggerDownload(mainBlob, `${safeTitle}.level`);
+
+  // Scan for sublevel references
+  try {
+    const buffer = await mainBlob.arrayBuffer();
+    const sublevelIds = extractSublevelIds(buffer, userId);
+
+    if (sublevelIds.length > 0) {
+      // Download each subroom with a small delay between downloads
+      for (let i = 0; i < sublevelIds.length; i++) {
+        const [subUserId, subIteration] = sublevelIds[i].split(":");
+        const suffix = sublevelIds.length === 1 ? "Subroom" : `Subroom_${i + 1}`;
+
+        try {
+          // Try to get details for the subroom title
+          let subVersion: string | number = "1";
+          try {
+            const subDetailsRes = await fetch(
+              `${supabaseUrl}/functions/v1/grab-proxy?action=details&user_id=${subUserId}&iteration=${subIteration}`,
+              { headers }
+            );
+            if (subDetailsRes.ok) {
+              const subDetails = await subDetailsRes.json();
+              if (subDetails?.iteration) subVersion = subDetails.iteration;
+            }
+          } catch {
+            // use defaults
+          }
+
+          const subBlob = await fetchLevelBlob(subUserId, subIteration, subVersion);
+
+          // Small delay so browser doesn't block multiple downloads
+          await new Promise((r) => setTimeout(r, 500));
+          triggerDownload(subBlob, `${safeTitle} ${suffix}.level`);
+        } catch {
+          console.warn(`Failed to download subroom ${sublevelIds[i]}`);
+        }
+      }
+    }
+  } catch {
+    // Subroom extraction failed silently — main level already downloaded
+  }
 }
 
 export async function downloadByLevelId(levelId: string): Promise<void> {
