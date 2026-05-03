@@ -172,7 +172,6 @@ const CharacterCosmetics = () => {
   const [showBadges, setShowBadges] = useState(false);
   const [customId, setCustomId] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
-  const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
 
   const filteredItems = useMemo(() => {
     if (activeTab === "All") return allCosmetics;
@@ -223,8 +222,14 @@ const CharacterCosmetics = () => {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const thumbnailUrl = (path: string) =>
-    `https://grabvr.quest/cosmetics/${path}.png`;
+  const emojiForCategory = (cat: CosmeticCategory): string => {
+    const map: Record<string, string> = {
+      Hats: "🎩", Heads: "👤", Face: "😎", Bodies: "👕",
+      Backpack: "🎒", Neck: "📿", Waist: "👖", Hands: "🧤",
+      Grapple: "🪝", Checkpoint: "🏁", Badges: "🏅",
+    };
+    return map[cat] || "🎭";
+  };
 
   return (
     <Layout>
@@ -314,19 +319,9 @@ const CharacterCosmetics = () => {
                 key={item.path}
                 className="bg-card/80 backdrop-blur-sm border border-border rounded-xl p-4 flex flex-col items-center gap-2 shadow-sm hover:shadow-md transition-shadow"
               >
-                {!imgErrors.has(item.path) ? (
-                  <img
-                    src={thumbnailUrl(item.path)}
-                    alt={item.name}
-                    className="w-16 h-16 object-contain"
-                    loading="lazy"
-                    onError={() => setImgErrors((prev) => new Set(prev).add(item.path))}
-                  />
-                ) : (
-                  <div className="w-16 h-16 flex items-center justify-center text-3xl bg-muted rounded-lg">
-                    🎭
-                  </div>
-                )}
+                <div className="w-16 h-16 flex items-center justify-center text-4xl">
+                  {emojiForCategory(item.category)}
+                </div>
                 <p className="text-xs font-medium text-card-foreground text-center leading-tight min-h-[2rem] flex items-center">
                   {item.name}
                 </p>
