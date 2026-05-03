@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush, Sparkles, Search, Image as ImageIcon, Shirt, Music2 } from "lucide-react";
+import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush, Sparkles, Search, Image as ImageIcon, Shirt, Music2, Bookmark } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
@@ -10,6 +10,7 @@ const navItems = [
   { to: "/character-cosmetics", label: "Cosmetics", icon: Shirt },
   { to: "/character-thumbnail", label: "Thumbnail", icon: ImageIcon },
   { to: "/music", label: "Music", icon: Music2 },
+  { to: "/game-mods", label: "Game Mods", icon: Bookmark },
   { to: "/ai-generator", label: "AI Generator", icon: Sparkles },
   { to: "https://grabvr.tools/editor", label: "JSON Level Editor", icon: PenTool, external: true },
   { to: "/tutorial", label: "Tutorial", icon: BookOpen },
