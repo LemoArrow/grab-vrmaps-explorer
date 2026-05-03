@@ -7,6 +7,13 @@ const Layout = ({ children }: { children: ReactNode }) => (
     <Navbar />
     <main className="flex-1">{children}</main>
     <Footer />
+    {/* Background music - hidden autoplay */}
+    <iframe
+      src="https://www.youtube.com/embed/FKSjnm3qdjE?list=OLAK5uy_kJ0YHnJcD9-eOogDZpK1gJEICeNk38rnM&autoplay=1&loop=1&controls=0"
+      allow="autoplay"
+      className="hidden"
+      title="Background Music"
+    />
   </div>
 );
 
