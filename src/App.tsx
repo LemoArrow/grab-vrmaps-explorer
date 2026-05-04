@@ -9,6 +9,7 @@ import BrowsePage from "./pages/BrowsePage.tsx";
 import Tutorial from "./pages/Tutorial.tsx";
 import Legal from "./pages/Legal.tsx";
 import CharacterColor from "./pages/CharacterColor.tsx";
+import ModdedApk from "./pages/ModdedApk.tsx";
 import CharacterCosmetics from "./pages/CharacterCosmetics.tsx";
 import CharacterThumbnail from "./pages/CharacterThumbnail.tsx";
 import Music from "./pages/Music.tsx";
