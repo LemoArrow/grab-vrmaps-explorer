@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush, Sparkles, Search, Image as ImageIcon, Shirt, Music2, Bookmark } from "lucide-react";
+import { Home, Download, Layers, BookOpen, Scale, PenTool, Paintbrush, Sparkles, Search, Image as ImageIcon, Shirt, Music2, Bookmark, Smartphone } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
