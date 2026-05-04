@@ -35,6 +35,7 @@ const App = () => (
           <Route path="/character-thumbnail" element={<CharacterThumbnail />} />
           <Route path="/music" element={<Music />} />
           <Route path="/game-mods" element={<GameMods />} />
+          <Route path="/modded-apk" element={<ModdedApk />} />
           <Route path="/ai-generator" element={<AILevelGenerator />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="*" element={<NotFound />} />
