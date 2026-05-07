@@ -14,6 +14,7 @@ import CharacterCosmetics from "./pages/CharacterCosmetics.tsx";
 import CharacterThumbnail from "./pages/CharacterThumbnail.tsx";
 import Music from "./pages/Music.tsx";
 import GameMods from "./pages/GameMods.tsx";
+import UserLevels from "./pages/UserLevels.tsx";
 import AILevelGenerator from "./pages/AILevelGenerator.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/character-thumbnail" element={<CharacterThumbnail />} />
           <Route path="/music" element={<Music />} />
           <Route path="/game-mods" element={<GameMods />} />
+          <Route path="/user-levels" element={<UserLevels />} />
           <Route path="/modded-apk" element={<ModdedApk />} />
           <Route path="/ai-generator" element={<AILevelGenerator />} />
           <Route path="/legal" element={<Legal />} />
