@@ -7,9 +7,6 @@ const corsHeaders = {
 const PROXY_BASE = "https://ijmowerdujivlvqojroc.supabase.co/functions/v1/grab-proxy";
 const PROXY_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqbW93ZXJkdWppdmx2cW9qcm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjEzOTcsImV4cCI6MjA5MDgzNzM5N30.55W84VdH_BaYqdBMSole6LLNHETjvkV-iYad4bMJeP8";
 
-// Direct GRAB API
-const GRAB_API = "https://api.slin.dev/grab/v1";
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -18,7 +15,7 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   const action = url.searchParams.get("action");
 
-  // -------- Search action: proxy through signed reference function --------
+  // -------- Search action --------
   if (action === "search") {
     const term = url.searchParams.get("term") || "";
     if (!term.trim()) {
@@ -52,7 +49,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // -------- User info action: get user profile --------
+  // -------- User info action --------
   if (action === "user_info") {
     const userId = url.searchParams.get("user_id");
     if (!userId) {
@@ -62,10 +59,12 @@ Deno.serve(async (req) => {
       });
     }
     try {
-      const res = await fetch(`${GRAB_API}/get_user_info?user_id=${encodeURIComponent(userId)}`, {
+      const params = new URLSearchParams({ action: "user_info", user_id: userId });
+      const res = await fetch(`${PROXY_BASE}?${params.toString()}`, {
         headers: {
-          Referer: "https://grabvr.quest/",
-          Origin: "https://grabvr.quest",
+          Authorization: `Bearer ${PROXY_KEY}`,
+          apikey: PROXY_KEY,
+          Accept: "application/json",
         },
       });
       const text = await res.text();
@@ -81,7 +80,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // -------- User levels action: list all levels for a user --------
+  // -------- User levels action --------
   if (action === "user_levels") {
     const userId = url.searchParams.get("user_id");
     if (!userId) {
@@ -91,10 +90,12 @@ Deno.serve(async (req) => {
       });
     }
     try {
-      const res = await fetch(`${GRAB_API}/list?max_format_version=21&user_id=${encodeURIComponent(userId)}`, {
+      const params = new URLSearchParams({ action: "user_levels", user_id: userId });
+      const res = await fetch(`${PROXY_BASE}?${params.toString()}`, {
         headers: {
-          Referer: "https://grabvr.quest/",
-          Origin: "https://grabvr.quest",
+          Authorization: `Bearer ${PROXY_KEY}`,
+          apikey: PROXY_KEY,
+          Accept: "application/json",
         },
       });
       const text = await res.text();
