@@ -7,8 +7,8 @@ const corsHeaders = {
 const PROXY_BASE = "https://ijmowerdujivlvqojroc.supabase.co/functions/v1/grab-proxy";
 const PROXY_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqbW93ZXJkdWppdmx2cW9qcm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjEzOTcsImV4cCI6MjA5MDgzNzM5N30.55W84VdH_BaYqdBMSole6LLNHETjvkV-iYad4bMJeP8";
 
-// Public unsigned community search API
-const SEARCH_BASE = "https://grabvr.tools/api";
+// Direct GRAB API
+const GRAB_API = "https://api.slin.dev/grab/v1";
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -47,6 +47,64 @@ Deno.serve(async (req) => {
     } catch (err) {
       return new Response(
         JSON.stringify({ error: "Search proxy error", details: String(err) }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+  }
+
+  // -------- User info action: get user profile --------
+  if (action === "user_info") {
+    const userId = url.searchParams.get("user_id");
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "Missing 'user_id' parameter" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    try {
+      const res = await fetch(`${GRAB_API}/get_user_info?user_id=${encodeURIComponent(userId)}`, {
+        headers: {
+          Referer: "https://grabvr.quest/",
+          Origin: "https://grabvr.quest",
+        },
+      });
+      const text = await res.text();
+      return new Response(text, {
+        status: res.status,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      return new Response(
+        JSON.stringify({ error: "User info error", details: String(err) }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+  }
+
+  // -------- User levels action: list all levels for a user --------
+  if (action === "user_levels") {
+    const userId = url.searchParams.get("user_id");
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "Missing 'user_id' parameter" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    try {
+      const res = await fetch(`${GRAB_API}/list?max_format_version=21&user_id=${encodeURIComponent(userId)}`, {
+        headers: {
+          Referer: "https://grabvr.quest/",
+          Origin: "https://grabvr.quest",
+        },
+      });
+      const text = await res.text();
+      return new Response(text, {
+        status: res.status,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      return new Response(
+        JSON.stringify({ error: "User levels error", details: String(err) }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
