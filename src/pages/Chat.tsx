@@ -123,7 +123,7 @@ const Chat = () => {
   // Signaling channel
   useEffect(() => {
     if (!user || !userId || !callChannelName) return;
-    const ch = supabase.channel(callChannelName, { config: { broadcast: { self: false } } });
+    const ch = supabase.channel(callChannelName, { config: { broadcast: { self: false }, private: true } });
     ch.on("broadcast", { event: "offer" }, async ({ payload }) => {
       if (payload.from === user.id) return;
       incomingOfferRef.current = payload.sdp;
