@@ -107,10 +107,23 @@ const Chat = () => {
       }
     };
     pc.ontrack = (e) => {
-      if (remoteAudioRef.current) {
-        remoteAudioRef.current.srcObject = e.streams[0];
+      const el = remoteAudioRef.current;
+      if (el) {
+        if (el.srcObject !== e.streams[0]) {
+          el.srcObject = e.streams[0];
+        }
+        el.muted = false;
+        el.volume = 1;
+        el.play().catch((err) => {
+          console.warn("Remote audio play() blocked:", err);
+          toast("Tap anywhere to enable call audio");
+          const resume = () => { el.play().catch(() => {}); document.removeEventListener("click", resume); };
+          document.addEventListener("click", resume, { once: true });
+        });
       }
     };
+    // Ensure we negotiate to receive audio even before adding local tracks
+    try { pc.addTransceiver("audio", { direction: "sendrecv" }); } catch {}
     pc.onconnectionstatechange = () => {
       if (["disconnected", "failed", "closed"].includes(pc.connectionState)) {
         cleanupCall();
@@ -197,7 +210,7 @@ const Chat = () => {
 
   return (
     <Layout>
-      <audio ref={remoteAudioRef} autoPlay />
+      <audio ref={remoteAudioRef} autoPlay playsInline />
       <div className="container mx-auto max-w-2xl py-4 px-4 flex flex-col h-[calc(100vh-12rem)]">
         <div className="flex items-center gap-3 pb-3 border-b">
           <Link to="/social"><Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button></Link>
