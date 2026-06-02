@@ -107,10 +107,23 @@ const Chat = () => {
       }
     };
     pc.ontrack = (e) => {
-      if (remoteAudioRef.current) {
-        remoteAudioRef.current.srcObject = e.streams[0];
+      const el = remoteAudioRef.current;
+      if (el) {
+        if (el.srcObject !== e.streams[0]) {
+          el.srcObject = e.streams[0];
+        }
+        el.muted = false;
+        el.volume = 1;
+        el.play().catch((err) => {
+          console.warn("Remote audio play() blocked:", err);
+          toast("Tap anywhere to enable call audio");
+          const resume = () => { el.play().catch(() => {}); document.removeEventListener("click", resume); };
+          document.addEventListener("click", resume, { once: true });
+        });
       }
     };
+    // Ensure we negotiate to receive audio even before adding local tracks
+    try { pc.addTransceiver("audio", { direction: "sendrecv" }); } catch {}
     pc.onconnectionstatechange = () => {
       if (["disconnected", "failed", "closed"].includes(pc.connectionState)) {
         cleanupCall();
