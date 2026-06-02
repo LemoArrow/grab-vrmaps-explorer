@@ -210,7 +210,7 @@ const Chat = () => {
 
   return (
     <Layout>
-      <audio ref={remoteAudioRef} autoPlay />
+      <audio ref={remoteAudioRef} autoPlay playsInline />
       <div className="container mx-auto max-w-2xl py-4 px-4 flex flex-col h-[calc(100vh-12rem)]">
         <div className="flex items-center gap-3 pb-3 border-b">
           <Link to="/social"><Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button></Link>
